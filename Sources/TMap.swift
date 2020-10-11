@@ -126,6 +126,13 @@ public struct TMap<Key : TSerializable & Hashable, Value : TSerializable>: Colle
     return result
   }
   
+  public func hash(into hasher: inout Hasher) {
+    for (key, value) in storage {
+      hasher.combine(key)
+      hasher.combine(value.hashValue)
+    }
+  }
+  
   /// Mark: TSerializable
   
   public static var thriftType : TType { return .map }

@@ -40,6 +40,12 @@ public struct TList<Element : TSerializable> : RandomAccessCollection, MutableCo
     return result
   }
   
+  public func hash(into hasher: inout Hasher) {
+    for element in storage {
+      hasher.combine(element.hashValue)
+    }
+  }
+  
   /// Mark: TSerializable
   public static var thriftType : TType { return .list }
 

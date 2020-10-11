@@ -135,10 +135,14 @@ public class TSSLSocketTransport: TStreamTransport {
       
       var tr = lastTrustResult
       let success = withUnsafeMutablePointer(to: &tr) { trPtr -> Bool in
-        if SecTrustEvaluate(myTrust, trPtr) != errSecSuccess {
-          return false
+        if #available(iOS 13, OSX 10.14, *) {
+          return SecTrustEvaluateWithError(myTrust, nil)
+        } else {
+          if SecTrustEvaluate(myTrust, trPtr) != errSecSuccess {
+            return false
+          }
+          return true
         }
-        return true
       }
       if !success { return false }
     }
@@ -190,10 +194,14 @@ extension TSSLSocketTransport: StreamDelegate {
         
         // Evaluate the trust chain
         let success = withUnsafeMutablePointer(to: &trustResult) { trustPtr -> Bool in
-          if SecTrustEvaluate(trust, trustPtr) != errSecSuccess {
-            return false
+          if #available(iOS 13, OSX 10.14, *) {
+            return SecTrustEvaluateWithError(trust, nil)
+          } else {
+            if SecTrustEvaluate(trust, trustPtr) != errSecSuccess {
+              return false
+            }
+            return true
           }
-          return true
         }
         
         if !success {

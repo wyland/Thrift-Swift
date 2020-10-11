@@ -124,7 +124,6 @@ public struct TSet<Element : TSerializable & Hashable> : SetAlgebra, Hashable, C
     return storage[bounds]
   }
 
-  
   /// Mark: Hashable
   public var hashValue : Int {
     let prime = 31
@@ -133,6 +132,12 @@ public struct TSet<Element : TSerializable & Hashable> : SetAlgebra, Hashable, C
       result = prime &* result &+ element.hashValue
     }
     return result
+  }
+  
+  public func hash(into hasher: inout Hasher) {
+    for element in storage {
+      hasher.combine(element)
+    }
   }
   
   /// Mark: TSerializable
